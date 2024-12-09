@@ -16,7 +16,6 @@ router.post('/upload', async (req, res) => {
         res.status(200).json({ message: rawData });
       }
     } catch (error) {
-      console.error('Error inserting data:', error);
       res.status(500).json({ message: 'Error uploading file data' });
     }
   });

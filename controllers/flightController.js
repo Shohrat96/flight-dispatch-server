@@ -7,11 +7,9 @@ const { processTafRequest } = require('./getWeatherTafController');
 
 
 
-const getFlights = async () => {
-  console.log(("get flight call"));
+const getFlights = async (req, res) => {
   
   const flights = await Flight.findAll();
-  console.log("Flights from database:", flights);
 
   const flightsWithWeather = await Promise.all(
     flights.map(async (item) => {
@@ -19,7 +17,6 @@ const getFlights = async () => {
       const originIcao = await IataIcao.findOne({
         where: { iata: item.origin },
       });
-      console.log("originIcao : ", originIcao);
       
       // Get ICAO code for destination using the IataIcao table
       const destIcao = await IataIcao.findOne({
@@ -44,18 +41,6 @@ const getFlights = async () => {
           })
         : null;
 
-        console.log("res: >>>>> ", {
-          flight_number: item.flight_number,
-          aircraft_type: item.aircraft_type,
-          reg_number: item.reg_number,
-          origin: item.origin,
-          destination: item.destination,
-          ETD: item.ETD,
-          ETA: item.ETA,
-          TAF_DEP: weatherDataDep ? weatherDataDep.taf : null,
-          TAF_DEST: weatherDataDest ? weatherDataDest.taf : null,
-        });
-        
       return {
         flight_number: item.flight_number,
         aircraft_type: item.aircraft_type,
@@ -69,8 +54,7 @@ const getFlights = async () => {
       };
     })
   );
-
-  return flightsWithWeather;
+  res.status(200).json(flightsWithWeather)
 };
 
 // Function to map and insert data into the Flight table
