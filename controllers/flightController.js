@@ -40,8 +40,9 @@ const getFlights = async (req, res) => {
             where: { icao_code: destIcaoCode },
           })
         : null;
-
+        
       return {
+        date: item.date,
         flight_number: item.flight_number,
         aircraft_type: item.aircraft_type,
         reg_number: item.reg_number,
@@ -49,8 +50,10 @@ const getFlights = async (req, res) => {
         destination: item.destination,
         ETD: item.ETD,
         ETA: item.ETA,
-        TAF_DEP: weatherDataDep ? weatherDataDep.taf : null,
-        TAF_DEST: weatherDataDest ? weatherDataDest.taf : null,
+        TAF_DEP: weatherDataDep ? weatherDataDep?.taf : null,
+        TAF_DEST: weatherDataDest ? weatherDataDest?.taf : null,
+        metar_dep: weatherDataDep ? weatherDataDep?.metar : null,
+        metar_dest: weatherDataDest ? weatherDataDest?.metar : null,
       };
     })
   );
@@ -61,13 +64,14 @@ const getFlights = async (req, res) => {
 const mapAndInsertFlights = async (rawData) => {
     const mappedData = rawData.map(item => {
       return {
+        date: new Date(item.date),
         flight_number: parseInt(item.flight_number), // Ensure flight_number is an integer
         aircraft_type: item.aircraft_type,
         reg_number: item.reg_number,
-        origin: item.departure, // Mapping departure to origin
+        origin: item.origin,
         destination: item.destination,
-        ETD: new Date(`${item.date}T${item.etd}:00`), // Combine date and etd and convert to Date object
-        ETA: new Date(`${item.date}T${item.eta}:00`), // Combine date and eta and convert to Date object
+        ETD: new Date(`${item.date}T${item.ETD}:00`), // Combine date and etd and convert to Date object
+        ETA: new Date(`${item.date}T${item.ETA}:00`), // Combine date and eta and convert to Date object
       };
     });
   

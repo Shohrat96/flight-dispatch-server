@@ -13,11 +13,11 @@ const WeatherData = sequelize.define('WeatherData', {
   },
   taf: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
   metar: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
   updated_at: {
     type: DataTypes.DATE,

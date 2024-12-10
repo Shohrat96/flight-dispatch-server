@@ -12,6 +12,7 @@ router.post('/upload', async (req, res) => {
 
       // Call the map and insert function
       const response = await mapAndInsertFlights(rawData);
+      
       if (typeof response === "object") {
         res.status(200).json({ message: rawData });
       }

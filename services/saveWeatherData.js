@@ -10,13 +10,13 @@ async function saveWeatherData(tafData) {
     const weatherDataEntries = tafData.map(entry => ({
       icao_code: entry.icaoId,
       taf: entry.rawTAF,
-      metar: '', // Assuming METAR is not provided in the current API response
+      metar: entry.rawOb, // Assuming METAR is not provided in the current API response
       updated_at: new Date(entry.bulletinTime), // Using bulletinTime as the updated timestamp
     }));
 
     // Save data to the database
     await WeatherData.bulkCreate(weatherDataEntries, {
-      updateOnDuplicate: ['taf', 'updated_at'], // Update TAF and timestamp if the entry already exists
+      updateOnDuplicate: ['taf','metar', 'updated_at'], // Update TAF and timestamp if the entry already exists
     });
 
   } catch (error) {

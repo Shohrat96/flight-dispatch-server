@@ -3,6 +3,10 @@ const sequelize = require('../config/database');
 
 // Define the Flight model
 const Flight = sequelize.define('Flight', {
+  date: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
+  },
   flight_number: {
     type: DataTypes.INTEGER,
     allowNull: false,

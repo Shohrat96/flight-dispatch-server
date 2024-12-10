@@ -7,12 +7,13 @@ const axios = require('axios');
  * @returns {Object} - Parsed JSON response from the API.
  */
 async function fetchTafData(icaoCodes) {
-    const apiUrl = `https://aviationweather.gov/api/data/taf?ids=${icaoCodes}`;
+    const apiUrl = `https://aviationweather.gov/api/data/taf?ids=${icaoCodes}&metar=true`;
 
     try {
         const response = await axios.get(apiUrl, {
             headers: { Accept: 'application/json' },
         });
+        
         return response.data;
     } catch (error) {
         console.error('Error fetching TAF data:', error.message);
