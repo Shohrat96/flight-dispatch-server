@@ -29,10 +29,11 @@ const getFlights = async (req, res) => {
 
       // Fetch weather data for departure (origin) using the ICAO code
       const weatherDataDep = originIcaoCode
-        ? await WeatherData.findOne({
-            where: { icao_code: originIcaoCode },
-          })
-        : null;
+      ? await WeatherData.findOne({
+          where: { icao_code: originIcaoCode },
+          order: [['updated_at', 'DESC']], // Order by updated_at in descending order
+        })
+      : null;
 
       // Fetch weather data for destination using the ICAO code
       const weatherDataDest = destIcaoCode

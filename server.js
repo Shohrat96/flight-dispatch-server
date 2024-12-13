@@ -2,9 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
-
 const flightRoutes = require('./routes/flightRoutes');
 const { syncDatabase } = require('./models');
+const initWebSocketServer = require('./webSocketServer');
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
    res.send('server launched successfully')
 })
 
+initWebSocketServer()
 // Flight routes
 app.use('/api/flights', flightRoutes);
 
