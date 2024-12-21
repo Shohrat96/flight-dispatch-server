@@ -2,6 +2,9 @@
 const WebSocket = require('ws');
 const cron = require('node-cron');
 const { IataIcao, WeatherData, Flight } = require('./models'); // Adjust this import as needed
+const dayjs = require('dayjs');
+const { checkVisibilityWarning } = require('./utils/checkVisibilityWarning');
+
 
 function initWebSocketServer() {
   // Initialize WebSocket server
@@ -31,7 +34,7 @@ function initWebSocketServer() {
   // Cron job to run getFlights and broadcast updates
   console.log('WebSocket script is running');
 
-  cron.schedule('*/5 * * * *', async () => { // Run every minute (or adjust as needed)
+  cron.schedule('*/1 * * * *', async () => { // Run every minute (or adjust as needed)
     console.log('Fetching flights data...');
     const flightsWithWeather = await getFlightsForCron();
     broadcast(flightsWithWeather);
@@ -55,6 +58,7 @@ function initWebSocketServer() {
         const weatherDataDest = destIcaoCode
           ? await WeatherData.findOne({ where: { icao_code: destIcaoCode }, order: [['updated_at', 'DESC']] })
           : null;
+      const isWarning = checkVisibilityWarning(weatherDataDest?.taf, item.ETA);
 
         return {
           date: item.date,
@@ -63,12 +67,13 @@ function initWebSocketServer() {
           reg_number: item.reg_number,
           origin: item.origin,
           destination: item.destination,
-          ETD: item.ETD,
-          ETA: item.ETA,
+          ETD: dayjs(item.ETD).format("HH:mm"),
+          ETA: dayjs(item.ETA).format("HH:mm"),
           TAF_DEP: weatherDataDep ? weatherDataDep?.taf : null,
           TAF_DEST: weatherDataDest ? weatherDataDest?.taf : null,
           metar_dep: weatherDataDep ? weatherDataDep?.metar : null,
           metar_dest: weatherDataDest ? weatherDataDest?.metar : null,
+          isWarning
         };
       })
     );
