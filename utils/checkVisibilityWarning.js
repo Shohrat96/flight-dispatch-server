@@ -6,12 +6,12 @@ const TAF_DEST= "TAF UBBN 201649Z 2018/2118 VRB04KT 8000 SCT050 BKN100 TX09/2112
 const ETA = "2024-12-20T01:20:00.000Z" //2001
 
 
-const checkVisibilityWarning = (taf, arrivalTime) => {
+const checkVisibilityWarning = (taf, arrivalTime, flight) => {
     const date = new Date(arrivalTime);
     const day = String(date.getUTCDate()).padStart(2, '0'); // Get day and ensure 2 digits
-    const hour = String(date.getUTCHours()).padStart(2, '0'); // Get hour and ensure 2 digits
+    let hour = String(date.getHours()).padStart(2, '0'); // Get hour and ensure 2 digits
     const arrTime = parseInt(day + hour); // Join day and hour as a string
-
+    
     const parseTAF = (taf) => {
         // Split TAF into meaningful sections by keywords (TEMPO, BECMG, FM, etc.)
         const regex = /(TEMPO|BECMG|FM\d{6})/g;
@@ -34,18 +34,18 @@ const checkVisibilityWarning = (taf, arrivalTime) => {
                 const datePart = item?.content?.split(" ").find(item => item.includes("/"))
                 const startTime = parseInt(datePart?.split("/")[0])
                 const endTime = parseInt(datePart?.split("/")[1])
+                
+                
                 if (startTime <= arrTime) {
                     if (endTime < arrTime) {
-                        if (Math.abs(arrTime - endTime) < 2) {
-                            console.log("item content: ", item);
-                            
+                        if (Math.abs(arrTime - endTime) < 2) {                            
                             res.push(item)
                         }
                     } else {
                         res.push(item)
                     }
                 } else {
-                    if (startTime - arrTime < 2) {
+                    if (Math.abs(startTime - arrTime) < 2) {
                         res.push(item)
                     }
                 }
@@ -61,10 +61,10 @@ const checkVisibilityWarning = (taf, arrivalTime) => {
     };
 
     const coveringTafParts = coveringDateTafParts()
-
+    
     const isBadVisibility = () => {
         const tafsWithBadVis = coveringTafParts.filter(item => item?.content?.split(" ").some(item => {
-            return !isNaN(item) && parseInt(item) < 8000
+            return !isNaN(item) && parseInt(item) < 1000
         }))
                 
         return tafsWithBadVis.length > 0

@@ -58,7 +58,7 @@ function initWebSocketServer() {
         const weatherDataDest = destIcaoCode
           ? await WeatherData.findOne({ where: { icao_code: destIcaoCode }, order: [['updated_at', 'DESC']] })
           : null;
-      const isWarning = checkVisibilityWarning(weatherDataDest?.taf, item.ETA);
+      const isWarning = checkVisibilityWarning(weatherDataDest?.taf, item.ETA, item);
 
         return {
           date: item.date,
