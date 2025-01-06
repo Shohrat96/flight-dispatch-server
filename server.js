@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const flightRoutes = require('./routes/flightRoutes');
 const jeppesenRoutes = require('./routes/jepessenRoutes');
+const loginRoutes = require('./routes/authRoutes');
+
 const { syncDatabase } = require('./models');
 const initWebSocketServer = require('./webSocketServer');
 
@@ -75,7 +77,18 @@ initWebSocketServer()
 // Flight routes
 app.use('/api/flights', flightRoutes);
 app.use('/api/jeppesen', jeppesenRoutes);
+app.use('/api/auth', loginRoutes);
 
+// Endpoint to restart WebSocket server
+app.post('/api/restart-websocket', (req, res) => {
+  try {
+    initWebSocketServer();
+    res.status(200).send({ message: 'WebSocket server restarted successfully' });
+  } catch (err) {
+    console.error('Error restarting WebSocket server:', err);
+    res.status(500).send({ message: 'Failed to restart WebSocket server', error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 
