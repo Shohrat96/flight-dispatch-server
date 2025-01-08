@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database'); // Your Sequelize instance or connection
 
 const IataIcao = sequelize.define('IataIcao', {
