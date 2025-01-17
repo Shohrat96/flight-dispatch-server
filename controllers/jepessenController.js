@@ -32,6 +32,8 @@ const getJeppesenData = async (req, res) => {
             res.json(chartsData);
 
         }
+        console.log("res: ", airportDataResponse);
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error retrieving ICAO data." });

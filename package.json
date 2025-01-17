@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon server.js"
   },
   "type": "commonjs",
   "keywords": [],
@@ -28,6 +28,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.7"
   }
 }
