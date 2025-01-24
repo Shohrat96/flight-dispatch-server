@@ -14,7 +14,7 @@ const checkVisibilityWarning = (taf, arrivalTime, flight) => {
 
     const parseTAF = (taf) => {
         // Split TAF into meaningful sections by keywords (TEMPO, BECMG, FM, etc.)
-        const regex = /(TEMPO|BECMG|FM\d{6})/g;
+        const regex = /(TEMPO|TAF|PROB30|PROB40|BECMG|FM\d{6})/g;
         const tafSections = taf?.split(regex).reduce((acc, item, index, arr) => {
             if (regex.test(item)) {
                 acc.push({ keyword: item, content: arr[index + 1]?.trim() || '' });
@@ -30,7 +30,7 @@ const checkVisibilityWarning = (taf, arrivalTime, flight) => {
     const coveringDateTafParts = () => {
         const res = [] //2109
         tafParts?.forEach((item) => {
-            if (item.keyword === 'TEMPO' || item.keyword === 'BECMG') {
+            if (item.keyword === 'TEMPO' || item.keyword === 'BECMG' || item.keyword === 'PROB30' || item.keyword === 'PROB40' || item.keyword === 'TAF') {
                 const datePart = item?.content?.split(" ").find(item => item.includes("/"))
                 const startTime = parseInt(datePart?.split("/")[0])
                 const endTime = parseInt(datePart?.split("/")[1])
@@ -64,7 +64,7 @@ const checkVisibilityWarning = (taf, arrivalTime, flight) => {
 
     const isBadVisibility = () => {
         const tafsWithBadVis = coveringTafParts.filter(item => item?.content?.split(" ").some(item => {
-            return !isNaN(item) && parseInt(item) < 1000
+            return !isNaN(item) && parseInt(item) <= 1000
         }))
 
         return tafsWithBadVis.length > 0

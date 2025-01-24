@@ -9,7 +9,7 @@ const loginRoutes = require('./routes/authRoutes');
 const { syncDatabase } = require('./models');
 const initWebSocketServer = require('./webSocketServer');
 const checklistRoutes = require('./routes/checklistRoutes');
-
+const remarkRoutes = require('./routes/remarkRoutes')
 
 
 const MOCK_DATA = [
@@ -82,6 +82,7 @@ app.use('/api/flights', flightRoutes);
 app.use('/api/jeppesen', jeppesenRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/checklist', checklistRoutes);
+app.use('/api/remarks', remarkRoutes);
 
 // Endpoint to restart WebSocket server
 app.post('/api/restart-websocket', (req, res) => {

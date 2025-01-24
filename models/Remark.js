@@ -3,11 +3,11 @@ const sequelize = require('../config/database'); // Your Sequelize instance or c
 
 const Remark = sequelize.define('Remark', {
     flight_number: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     flight_date: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     author: {
@@ -18,13 +18,10 @@ const Remark = sequelize.define('Remark', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-}, {
-    indexes: [
-        {
-            unique: true,
-            fields: ['flight_number', 'flight_date'],
-        },
-    ],
+    flight_data: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+    }
 });
 
 module.exports = Remark;
