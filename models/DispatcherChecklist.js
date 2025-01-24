@@ -19,7 +19,7 @@ const DispatcherChecklist = sequelize.define("DispatcherChecklist", {
         type: DataTypes.JSONB,
         allowNull: false,
     },
-    user_name: {
+    email: {
         type: DataTypes.STRING,
         allowNull: false,
     },
