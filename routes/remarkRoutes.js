@@ -25,8 +25,24 @@ router.post('/save', async (req, res) => {
 // GET: Retrieve All remark Data
 router.get('/all', async (req, res) => {
     try {
-        const remarks = await RemarkModel.findAll();
-        res.status(200).json(remarks);
+        const page = parseInt(req.query?.page) || 1; // Default to page 1
+        const limit = 20; // Maximum records per page
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await RemarkModel.findAndCountAll({
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']], // Optional: Sort by latest first
+        });
+        const totalPages = Math.ceil(count / limit);
+        res.status(200).json({
+            currentPage: page,
+            totalPages,
+            totalItems: count,
+            remarks: rows
+        });
+        // const remarks = await RemarkModel.findAll();
+        // res.status(200).json(remarks);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error fetching remarks data', details: err.message });
