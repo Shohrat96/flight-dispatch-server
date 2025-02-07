@@ -37,7 +37,13 @@ const Flight = sequelize.define('Flight', {
   },
 }, {
   timestamps: false, // Disable createdAt and updatedAt
-  tableName: "flight_list_shift"
+  tableName: "flight_list_shift",
+  timezone: '+04:00', // Ensures Sequelize respects PG timezone
+  dialectOptions: {
+    useUTC: false,
+    dateStrings: true,
+    typeCast: true
+  }
 });
 
 module.exports = Flight;

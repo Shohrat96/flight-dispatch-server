@@ -44,7 +44,7 @@ function initWebSocketServer() {
     }
   };
 
-  cronJob = cron.schedule('*/15 * * * * *', async () => {
+  cronJob = cron.schedule('0 * * * * *', async () => {
     const flightsWithWeather = await getFlightsForCron();
     broadcast(flightsWithWeather);
   });

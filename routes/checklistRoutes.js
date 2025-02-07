@@ -12,11 +12,6 @@ router.post('/save', async (req, res) => {
             return res.status(400).json({ error: 'One or more required fields are missing.' });
         }
 
-        // Log the data for debugging
-        // console.log('scheduleOperations:', scheduleOperations);
-        // console.log('flightDispatch:', flightDispatch);
-        // console.log('remarksHistory:', remarksHistory);
-
         // Save the data to the database
         const checklist = await DispatcherChecklist.create({
             schedule_operations: scheduleOperations,

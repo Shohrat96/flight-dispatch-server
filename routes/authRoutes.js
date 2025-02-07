@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
 router.post('/change-password', async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
-    
+
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -54,8 +54,6 @@ router.post('/change-password', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        console.log("user: ", user);
-
         // Validate old password
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
