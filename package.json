@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
     "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon server.js"
   },
   "type": "commonjs",
