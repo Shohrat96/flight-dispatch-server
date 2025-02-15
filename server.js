@@ -9,7 +9,8 @@ const loginRoutes = require('./routes/authRoutes');
 const { syncDatabase } = require('./models');
 const initWebSocketServer = require('./webSocketServer');
 const checklistRoutes = require('./routes/checklistRoutes');
-const remarkRoutes = require('./routes/remarkRoutes')
+const remarkRoutes = require('./routes/remarkRoutes');
+const { supabase } = require('./config/supabaseClient');
 
 
 const MOCK_DATA = [
@@ -66,7 +67,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'https://azaldispatch.netlify.app'
 }))
 
 app.use(bodyParser.json());
@@ -76,6 +77,14 @@ app.get('/', (req, res) => {
   res.send('server launched successfully')
 })
 
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, async () => {
+  console.log(`Server is running on port ${PORT}`);
+
+  // await syncDatabase()
+});
+
 initWebSocketServer()
 // Flight routes
 app.use('/api/flights', flightRoutes);
@@ -83,6 +92,8 @@ app.use('/api/jeppesen', jeppesenRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/checklist', checklistRoutes);
 app.use('/api/remarks', remarkRoutes);
+
+
 
 // Endpoint to restart WebSocket server
 app.post('/api/restart-websocket', (req, res) => {
@@ -95,9 +106,4 @@ app.post('/api/restart-websocket', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
-  await syncDatabase()
-});
