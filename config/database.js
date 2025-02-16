@@ -7,6 +7,11 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
   host: 'localhost',
   dialect: 'postgres',
   port: 5432,
+  dialectOptions: {
+    useUTC: false,
+    dateStrings: true,
+    typeCast: true
+  },
   logging: false, // Disable logging if unnecessary
 });
 

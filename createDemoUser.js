@@ -13,7 +13,6 @@ async function createDemoUser() {
             password: "password11", // Example password (plain text for demo purposes, consider hashing passwords in a real app)
         });
 
-        console.log("Demo user created:", demoUser.email);
     } catch (error) {
         console.error("Error creating demo user:", error);
     }
