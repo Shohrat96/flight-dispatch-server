@@ -7,6 +7,7 @@ const { saveWeatherData } = require('./services/saveWeatherData');
 const { getIataIcaoMapping } = require('./services/convertIatatoIcaoService');
 const { processTafRequest } = require('./controllers/getWeatherTafController');
 const { supabase } = require('./config/supabaseClient');
+const axios = require("axios");
 
 let wss = null; // Store WebSocket server instance
 let cronJob = null; // Store cron job instance
@@ -167,6 +168,19 @@ function initWebSocketServer() {
 
     // return flightsWithWeather;
   }
+
+  function keepServerAlive() {
+    setInterval(async () => {
+      try {
+        const res = await axios.get("https://flight-dispatch-server.onrender.com");
+        console.log("Keep-alive ping successful:", res.status);
+      } catch (error) {
+        console.error("Keep-alive ping failed:", error.message);
+      }
+    }, 3 * 60 * 1000); // Every 3 minutes
+  }
+
+  keepServerAlive();
 
   console.log('WebSocket server initialized');
 }
