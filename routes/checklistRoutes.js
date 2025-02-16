@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.post('/save', async (req, res) => {
     try {
-        const { scheduleOperations, flightDispatch, remarksHistory, email } = req.body;
+        const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email } = req.body;
 
         // Ensure no required fields are missing
-        if (!scheduleOperations || !flightDispatch || !remarksHistory) {
+        if (!scheduleOperations || !flightDispatch || !remarksHistory || !dispatcherTakingOver) {
             return res.status(400).json({ error: 'One or more required fields are missing.' });
         }
 
@@ -22,6 +22,7 @@ router.post('/save', async (req, res) => {
             schedule_operations: scheduleOperations,
             flight_dispatch: flightDispatch,
             remarks_history: remarksHistory,
+            dispatchertakingover: dispatcherTakingOver,
             email: email
         });
 
