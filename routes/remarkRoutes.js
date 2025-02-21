@@ -1,12 +1,12 @@
 const express = require('express');
 const RemarkModel = require('../models/Remark');
-const { supabase } = require('../config/supabaseClient');
+const { supabase, authMiddleware } = require('../config/supabaseClient');
 const router = express.Router();
 
 // POST: Save remark Data
-router.post('/save', async (req, res) => {
+router.post('/save', authMiddleware, async (req, res) => {
     try {
-        const { author, remark, flight_data } = req.body;
+        const { author, remark, flight_data, category } = req.body;
         const { date, flight_number } = flight_data;
 
         // Insert the new remark into the "remarks" table
@@ -16,6 +16,7 @@ router.post('/save', async (req, res) => {
                 flight_date: date,
                 author,
                 remark,
+                category,
                 flight_data,
             },
         ]).select();
