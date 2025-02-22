@@ -92,10 +92,10 @@ const { supabase } = require('../config/supabaseClient');
 // POST: Save Checklist Data
 router.post('/save', async (req, res) => {
     try {
-        const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email } = req.body;
+        const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email, shift } = req.body;
 
         // Ensure no required fields are missing
-        if (!scheduleOperations || !flightDispatch || !remarksHistory || !dispatcherTakingOver) {
+        if (!scheduleOperations || !flightDispatch || !remarksHistory || !dispatcherTakingOver || !shift) {
             return res.status(400).json({ error: 'One or more required fields are missing.' });
         }
 
@@ -107,7 +107,8 @@ router.post('/save', async (req, res) => {
                 flight_dispatch: flightDispatch,
                 remarks_history: remarksHistory,
                 dispatchertakingover: dispatcherTakingOver,
-                email: email
+                email: email,
+                shift: shift
             }])
             .select()
             .maybeSingle(); // Ensures a single object is returned instead of an array

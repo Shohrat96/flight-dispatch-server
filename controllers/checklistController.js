@@ -1,7 +1,7 @@
 const DispatcherChecklist = require("../models/DispatcherChecklist");
 
 exports.saveChecklist = async (req, res) => {
-    const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email } = req.body;
+    const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email, shift } = req.body;
 
     try {
         const checklist = await DispatcherChecklist.create({
@@ -10,6 +10,7 @@ exports.saveChecklist = async (req, res) => {
             remarks_history: remarksHistory,
             dispatchertakingover: dispatcherTakingOver,
             email: email,
+            shift: shift
         });
 
         res.status(201).json({
