@@ -42,7 +42,7 @@ async function ensureValidSession(req, res, next) {
 
 
 // POST: Save remark Data
-router.post('/save', authMiddleware, async (req, res) => {
+router.post('/save', async (req, res) => {
     try {
         const { author, remark, flight_data, category } = req.body;
         const { date, flight_number } = flight_data;
