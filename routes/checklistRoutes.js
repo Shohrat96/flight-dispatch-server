@@ -7,28 +7,21 @@ const { supabase } = require('../config/supabaseClient');
 
 router.post('/save', async (req, res) => {
     try {
-        const { scheduleOperations, flightDispatch, remarksHistory, email } = req.body;
+        const { scheduleOperations, flightDispatch, remarksHistory, dispatcherTakingOver, email } = req.body;
 
         // Ensure no required fields are missing
-        if (!scheduleOperations || !flightDispatch || !remarksHistory) {
+        if (!scheduleOperations || !flightDispatch || !remarksHistory || !dispatcherTakingOver) {
             return res.status(400).json({ error: 'One or more required fields are missing.' });
         }
 
         // Save the data to the database
-        const { data, error } = await supabase
-            .from('dispatcher_checklist') // Use your actual table name
-            .insert([
-                {
-                    schedule_operations: scheduleOperations,
-                    flight_dispatch: flightDispatch,
-                    remarks_history: remarksHistory,
-                    email: email
-                }
-            ]);
-
-        if (error) {
-            throw error;
-        }
+        const checklist = await DispatcherChecklist.create({
+            schedule_operations: scheduleOperations,
+            flight_dispatch: flightDispatch,
+            remarks_history: remarksHistory,
+            dispatchertakingover: dispatcherTakingOver,
+            email: email
+        });
 
         res.status(200).json({ message: 'Checklist saved successfully', checklist: data });
 

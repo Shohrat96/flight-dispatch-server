@@ -19,6 +19,10 @@ const DispatcherChecklist = sequelize.define("DispatcherChecklist", {
         type: DataTypes.JSONB,
         allowNull: false,
     },
+    dispatchertakingover: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
