@@ -57,4 +57,4 @@ async function authMiddleware(req, res, next) {
 
 
 
-module.exports = { supabase, authMiddleware, sessionStore };
+module.exports = { supabase };

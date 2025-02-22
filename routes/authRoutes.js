@@ -4,7 +4,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User'); // Import the User model
-const { supabase, sessionStore } = require('../config/supabaseClient');
+const { supabase } = require('../config/supabaseClient');
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET; // Get the secret from .env
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
         // Return the session token from Supabase
-      res.json({ token: data.session.access_token, email: data.user.email, refresh_token: data.session.refresh_token });
+        res.json({ token: data.session.access_token, email: data.user.email, refresh_token: data.session.refresh_token });
 
     } catch (error) {
         console.error("Login error:", error.message);
