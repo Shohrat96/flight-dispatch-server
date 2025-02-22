@@ -3,6 +3,44 @@ const RemarkModel = require('../models/Remark');
 const { supabase, authMiddleware } = require('../config/supabaseClient');
 const router = express.Router();
 
+
+async function ensureValidSession(req, res, next) {
+
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ error: "Unauthorized: No token provided" });
+        }
+
+        const token = authHeader.split(" ")[1]; // Extract the token from "Bearer <token>"
+
+        // Validate the current token
+        const { data: user, error: userError } = await supabase.auth.getUser(token);
+        console.log("user: ", user);
+        console.log("userError: ", userError);
+
+        if (userError || !user) {
+            console.log("Session expired or invalid. Attempting to refresh...");
+
+            // Attempt to refresh the session using the token
+            const { data: sessionData, error: refreshError } = await supabase.auth.refreshSession({ refresh_token: token });
+
+            if (refreshError) {
+                throw new Error("Session refresh failed. Please log in again.");
+            }
+
+            console.log("Session refreshed successfully.");
+        }
+
+        next();
+    } catch (err) {
+        console.error("Session check/refresh failed:", err);
+        return res.status(401).json({ error: "Session expired. Please log in again." });
+    }
+}
+
+
+
 // POST: Save remark Data
 router.post('/save', authMiddleware, async (req, res) => {
     try {
