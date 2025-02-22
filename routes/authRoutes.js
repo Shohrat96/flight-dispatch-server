@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
         // Return the session token from Supabase
-        res.json({ token: data.session.access_token, email: data.user.email });
+        res.json({ token: data.session.access_token, email: data.user.email, refresh_token: data.session.refresh_token });
 
     } catch (error) {
         console.error("Login error:", error.message);
