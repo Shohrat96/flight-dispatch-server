@@ -23,6 +23,10 @@ const DispatcherChecklist = sequelize.define("DispatcherChecklist", {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    shift: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,

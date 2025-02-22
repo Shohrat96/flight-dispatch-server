@@ -67,7 +67,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: 'https://azaldispatch.netlify.app'
+  origin: 'http://localhost:3000'
+  // origin: 'https://azaldispatch.netlify.app'
 }))
 
 app.use(bodyParser.json());
@@ -98,7 +99,7 @@ app.post('/api/restart-websocket', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);

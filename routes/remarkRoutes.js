@@ -1,6 +1,6 @@
 const express = require('express');
 const RemarkModel = require('../models/Remark');
-const { supabase } = require('../config/supabaseClient');
+const { supabase, authMiddleware } = require('../config/supabaseClient');
 const router = express.Router();
 
 
@@ -42,7 +42,7 @@ async function ensureValidSession(req, res, next) {
 
 
 // POST: Save remark Data
-router.post('/save', async (req, res) => {
+router.post('/save', authMiddleware, async (req, res) => {
     try {
         const { author, remark, flight_data, category } = req.body;
         const { date, flight_number } = flight_data;
