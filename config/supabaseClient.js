@@ -1,58 +1,70 @@
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
+const cron = require("node-cron");
 
 const supabaseUrl = process.env.DB_SUPABASE_URL;
 const supabaseKey = process.env.DB_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Simulated storage for session (Replace this with DB or Redis)
-let sessionStore = {};
 
-// Function to refresh the session manually
-async function refreshSession() {
-    console.log(" session in refreshSession : ", sessionStore.refresh_token);
+let refreshJob = null; // To store the cron job reference
 
-    if (!sessionStore.session.refresh_token) {
-        console.log('No refresh token available.');
-        return null;
+async function refreshSupabaseSession() {
+    try {
+        const { data: session } = await supabase.auth.getSession();
+
+        if (!session || !session.session) {
+            console.log("No active session found. Stopping refresh.");
+            stopSessionRefresh();
+            return false;
+        }
+
+        const { data, error } = await supabase.auth.refreshSession();
+        if (error) throw error;
+
+        console.log("Session refreshed:", data);
+        return true;
+    } catch (error) {
+        console.error("Error refreshing session:", error.message);
+        return false;
+    }
+}
+
+// Start session refresh using cron job (runs every 30 min)
+function startSessionRefresh() {
+    if (refreshJob) {
+        console.log("Session refresh is already running.");
+        return;
     }
 
-    const { data, error } = await supabase.auth.refreshSession({
-        refresh_token: sessionStore.refresh_token
+    refreshJob = cron.schedule("*/50 * * * *", () => {
+        console.log("Running session refresh...");
+        refreshSupabaseSession();
     });
 
-    if (error) {
-        console.error('Session refresh failed:', error.message);
-        return null;
-    }
-
-    console.log('Session refreshed:', data.session);
-
-    sessionStore = data.session; // Store updated session tokens
-    console.log("session store: ", data.session);
-
-    return data.session;
+    console.log("Session refresh cron job started.");
 }
 
-// Middleware to check and refresh session
-async function authMiddleware(req, res, next) {
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    if (!sessionStore.access_token || sessionStore.expires_at < currentTime) {
-        console.log('Access token expired. Refreshing session...');
-        console.log("session store: ", sessionStore);
-
-        const newSession = await refreshSession();
-
-        if (!newSession) {
-            return res.status(401).json({ error: 'Session expired. Please log in again.' });
-        }
+// Stop session refresh when user logs out
+function stopSessionRefresh() {
+    if (refreshJob) {
+        refreshJob.stop();
+        refreshJob = null;
+        console.log("Session refresh cron job stopped.");
     }
-
-    req.supabase = supabase;
-    next();
 }
+
+// Listen for login & logout events
+supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN") {
+        console.log("User logged in, starting session refresh.");
+        startSessionRefresh();
+    } else if (event === "SIGNED_OUT") {
+        console.log("User logged out, stopping session refresh.");
+        stopSessionRefresh();
+    }
+});
 
 
 
