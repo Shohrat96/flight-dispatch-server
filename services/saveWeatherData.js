@@ -5,12 +5,19 @@ const WeatherData = require('../models/WeatherData'); // Adjust the path to your
  * Saves TAF data into the database using the WeatherData model.
  * @param {Array} tafData - Array of TAF data objects from the API response.
  */
+
 async function saveWeatherData(tafData) {
   try {
     if (!Array.isArray(tafData)) {
       console.error("tafData is not an array:", tafData);
       throw new Error("tafData must be an array");
     }
+
+    // Refresh session if needed
+    // const refreshed = await refreshSupabaseSession();
+    // if (!refreshed) {
+    //   throw new Error("Could not refresh session, user might need to re-login.");
+    // }
     // Retrieve all existing bulletinTime values in the database for the given ICAO codes
     const icaoCodes = tafData.map(entry => entry.icaoId);
 
