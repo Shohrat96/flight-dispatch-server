@@ -10,6 +10,7 @@ const { syncDatabase } = require('./models');
 const initWebSocketServer = require('./webSocketServer');
 const checklistRoutes = require('./routes/checklistRoutes');
 const remarkRoutes = require('./routes/remarkRoutes');
+const divertedRoutes = require('./routes/divertedRoutes');
 const { supabase } = require('./config/supabaseClient');
 
 
@@ -87,6 +88,7 @@ app.use('/api/jeppesen', jeppesenRoutes);
 app.use('/api/auth', loginRoutes);
 app.use('/api/checklist', checklistRoutes);
 app.use('/api/remarks', remarkRoutes);
+app.use('/api/diverted', divertedRoutes);
 
 
 
