@@ -6,7 +6,7 @@ const router = express.Router();
 // POST: Save remark Data
 router.post('/save', async (req, res) => {
     try {
-        const { author, remark, flight_data, category } = req.body;
+        const { author, remark, flight_data, category, customCategory } = req.body;
         const { date, flight_number } = flight_data;
 
         // Insert the new remark into the "remarks" table
@@ -17,6 +17,7 @@ router.post('/save', async (req, res) => {
                 author,
                 remark,
                 category,
+                custom_category: customCategory,
                 flight_data,
             },
         ]).select();
