@@ -105,7 +105,7 @@ function initWebSocketServer() {
           if (weatherDepError) console.error("Weather dep fetch error:", weatherDepError);
           if (weatherDestError) console.error("Weather dest fetch error:", weatherDestError);
 
-          const isWarning = checkVisibilityWarning(weatherDataDest?.taf, item.ETA);
+          const isWarning = checkVisibilityWarning(weatherDataDest?.taf, item.ETA, item.ETD, item);
 
           return {
             date: item.date,
