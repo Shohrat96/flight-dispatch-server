@@ -6,13 +6,22 @@ const TAF_DEST = "TAF UBBN 201649Z 2018/2118 VRB04KT 8000 SCT050 BKN100 TX09/211
 const ETA = "2024-12-20T01:20:00.000Z" //2001
 
 
-const checkVisibilityWarning = (taf, arrivalTime, flight) => {
+const checkVisibilityWarning = (taf, arrivalTime, departureTime, item) => {
+
     const date = new Date(arrivalTime);
-    const day = String(date.getDate()).padStart(2, '0'); // Get day and ensure 2 digits
+    let day = String(date.getDate()).padStart(2, '0'); // Get day and ensure 2 digits
 
     let hour = String(date.getHours()).padStart(2, '0'); // Get hour and ensure 2 digits
 
+    const depDate = new Date(departureTime);
+    let depHour = String(depDate.getHours()).padStart(2, '0');
+
+    if (hour < depHour) {
+        day = String(parseInt(day) + 1)
+    }
+
     const arrTime = parseInt(day + hour); // Join day and hour as a string
+
 
     const parseTAF = (taf) => {
         // Split TAF into meaningful sections by keywords (TEMPO, BECMG, FM, etc.)
